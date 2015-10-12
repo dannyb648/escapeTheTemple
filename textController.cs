@@ -6,7 +6,7 @@ public class TextControllor : MonoBehaviour {
 
 	public Text text;
 	
-	private enum States{room0, room1, room_Key, room_Torch, room_Both, key, torch, box, box_Death, door0, door_Key, door_Locked, door_Torch, door_Both, door_Death, door_Unlock, false_freedom, death, corridor0, corridor1, floor_Death, floor_Life, mosaic, stone0, stone1, face_Death, face_Unlock};
+	private enum States{room0, room1, room_Key, room_Torch, room_Both, key, torch, box, box_Death, door0, door_Key, door_Locked, door_Torch, door_Both, door_Death, door_Unlock, false_freedom, death, corridor0, corridor1, floor_Death, floor_Life, mosaic, stone0, stone1, face_Death, face_Unlock, wall_Death_elephant, wall_Death_horse, wall_Life, wall, freedom};
 	private States myState;
 	
 	bool keyInv = false;
@@ -113,6 +113,15 @@ public class TextControllor : MonoBehaviour {
 		{
 			state_mosaic();
 		}
+		else if(myState == States.wall_Death_elephant)
+		{
+			state_wall_Death_Elephant();
+		}
+		else if(myState == States.wall_Death_horse)
+		{
+			state_wall_Death_Horse();
+		}
+		
 	}
 	
 	void state_room0()
@@ -581,8 +590,8 @@ public class TextControllor : MonoBehaviour {
 	{
 		text.text = "You survey the corridor you are now in. " +
 					"To your left, a large, stone Aztec face is mounted on the wall. " +
-					"On your right is a colourful mosaic depicting some sort of battle. " +
-					"At the end of the corridor, you can see a large wall in an engraving.\n\n" +
+					"On your right is a colourful mosaic depicting some sort of jungle. " +
+					"At the end of the corridor, you can see a large painted wall with an engraving.\n\n" +
 					"Press F to inspect the stone face.\n" +
 					"Press M to inspect the Mosaic.\n" +
 					"Press W to walk towards the wall at the end of the corridor.";
@@ -618,7 +627,7 @@ public class TextControllor : MonoBehaviour {
 	{
 		text.text = "Before you mounted on the wall is a large aztec face chiseled out of stone. " +
 					"It's eyes almost seem to glow and eerie yellow gold colour. " +
-					"What stands out the most is its large gaping mouth.\n\n " +
+					"What stands out the most is its large gaping mouth. \n\n" +
 					"Press H to put your Hand in the mouth of the face and check inside. " +
 					"Press R to Return to the rest of the corridor";
 					
@@ -663,7 +672,7 @@ public class TextControllor : MonoBehaviour {
 					"As you are searching, you hear a click. Suddenly some sort of stone block falls from inside the face. " +
 					"Shock overcomes you, and you qucikly try and pull your hand out of the mouth. " + 
 					"However you realise that only your arm has left the Aztec face, your hand is no longer there... " +
-					"The loss of blood and the shock cause you to begin to pass out... How did it take off your hand?\n\n " +
+					"The loss of blood and the shock cause you to begin to pass out... How did it take off your hand?\n\n" +
 					"Press C to Continue.";
 					
 		if(Input.GetKeyDown (KeyCode.C))
@@ -674,7 +683,13 @@ public class TextControllor : MonoBehaviour {
 	
 	void state_mosaic()
 	{
-		text.text = "";
+		text.text = "The mosaic in front of you is incredible, it takes your breath away. " +
+					"Full of reds, greens and yellows, its both bright and detailed. " +
+					"What tweaks your interest are the three large symbols in the centre of the piece. \n" +
+					"A large Horse with great yellow wings. \n" +
+					"A wide Elephant painted in tones of red. \n" +
+					"A long green Crocodile biting its tail. \n\n" +
+					"Press R to Return";
 		
 		if (Input.GetKeyDown(KeyCode.R))
 		{
@@ -694,36 +709,89 @@ public class TextControllor : MonoBehaviour {
 		stoneFed = true;
 		text.text = "You put your key into the face. You hear a low rumbling sound " +
 					"As you look around you realise that somehow everything seems safer.\n\n" +
-					"Press C to Continue."
+					"Press C to Continue.";
 		
-		if(Input.GetKeyDown(KeyCode.C)
+		if(Input.GetKeyDown(KeyCode.C))
 		{
 			myState = States.corridor1;
 		}
 	}
 	
+	void state_corridor1()
+	{
+		text.text = "You survey the corridor you are now in. " +
+					"On your right is a colourful mosaic depicting some sort of jungle. " +
+					"At the end of the corridor, you can see a large painted wall with an engraving.\n\n" +
+					"Press M to inspect the Mosaic.\n" +
+					"Press W to walk towards the painted wall at the end of the corridor.";
+		
+		if(Input.GetKeyDown(KeyCode.M))
+		{
+			myState = States.mosaic;
+		}
+		else if(Input.GetKeyDown(KeyCode.W))
+		{
+			if (stoneFed == true)
+			{
+				myState = States.floor_Death;
+			}
+			else if(stoneFed == false)
+			{
+				myState = States.floor_Life;
+			}
+		}
+	}
+	
 	void state_floor_Death()
 	{
-	
+		text.text = "You see the wall at the end of the corridor, and you begin to walk towards it. " +
+					"You feel the stone below you begin to give way so you jump to the next one. " +
+					"However this also begins to fall beneath you as well. You realise the entire floor has given way. " +
+					"You fall and fall and fall, for what seems like a life time, until you hit something hard with a whack. \n\n" +
+					"Press C to Continue.";
+					
+		if(Input.GetKeyDown(KeyCode.C))
+		{
+			myState = States.death;
+		}
 	}
 	
 	void state_floor_Life()
 	{
-	
+		text.text = "You feel that the ground beneath you is firm and strong. " +
+					"You continue apprehensively and eventually you reach the wall at the end. \n\n" +
+					"Press C to Continue.";
+		
+		if(Input.GetKeyDown(KeyCode.C))
+		{
+			myState = States.wall;
+		}
 	}
 	
 	void state_wall()
 	{
-	
+		text.text = "You approach the wall at the end of the corridor. " +
+					"T
 	}
 	
-	void state_wall_Death1()
+	void state_wall_Death_Elephant()
+	{
+		
+	}
+	
+	void state_wall_Death_Horse()
 	{
 	
 	}
 	
-	void state_wall_Death2()
+	void state_wall_Life()
 	{
+	
+	}
+	
+	void state_freedom()
+	{
+	
 	}
 	
 }
