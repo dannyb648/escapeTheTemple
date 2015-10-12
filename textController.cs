@@ -1,4 +1,3 @@
-using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
@@ -6,7 +5,7 @@ public class TextControllor : MonoBehaviour {
 
 	public Text text;
 	
-	private enum States{room0, room1, room_Key, room_Torch, room_Both, key, torch, box, box_Death, door0, door_Key, door_Locked, door_Torch, door_Both, door_Death, door_Unlock, false_freedom, death, corridor0, corridor1, floor_Death, floor_Life, mosaic, stone0, stone1, face_Death, face_Unlock, wall_Death_elephant, wall_Death_horse, wall_Life, wall, freedom};
+	private enum States{room0, room1, room_Key, room_Torch, room_Both, key, torch, box, box_Death, door0, door_Key, door_Locked, door_Torch, door_Both, door_Death, door_Unlock, false_freedom, death, corridor0, corridor1, floor_Death, floor_Life, mosaic, stone0, stone1, face_Death, face_Unlock, wall_Death_elephant, wall_Death_horse, wall_Life, wall, freedom0};
 	private States myState;
 	
 	bool keyInv = false;
@@ -24,6 +23,7 @@ public class TextControllor : MonoBehaviour {
 		if (myState == States.room0)
 		{
 			state_room0();
+			
 		}
 		else if(myState == States.box)
 		{
@@ -97,6 +97,10 @@ public class TextControllor : MonoBehaviour {
 		{
 			state_corridor0();
 		}
+		else if(myState == States.corridor1)
+		{
+			state_corridor1();
+		}
 		else if(myState == States.stone0)
 		{
 			state_stone0();
@@ -121,11 +125,30 @@ public class TextControllor : MonoBehaviour {
 		{
 			state_wall_Death_Horse();
 		}
+		else if(myState == States.face_Unlock)
+		{
+			state_face_Unlock();
+		}
+		else if(myState == States.floor_Life)
+		{
+			state_floor_Life();
+		}
+		else if(myState == States.floor_Death)
+		{
+			state_floor_Death();
+		}
+		else if(myState == States.freedom0)
+		{
+			state_freedom0();
+		}
 		
 	}
 	
 	void state_room0()
 	{
+		keyInv = false;
+		torchInv = false;
+		stoneFed = false;
 		text.text = "You awake inside what appears to be an ancient Aztec temple. " +
 					"You realise quickly that making the wrong move will cost you your life. " + 
 					"You inspect your surroundings. You are in a room with only a torch for light. " +
@@ -293,12 +316,10 @@ public class TextControllor : MonoBehaviour {
 		
 		if(Input.GetKeyDown(KeyCode.B))
 		{
-			print ("B PRESSED");
 			myState = States.box;
 		}
 		else if(Input.GetKeyDown(KeyCode.D))
 		{
-			print("D PRESSED");
 			myState = States.door_Both;
 		}
 	}
@@ -733,11 +754,11 @@ public class TextControllor : MonoBehaviour {
 		{
 			if (stoneFed == true)
 			{
-				myState = States.floor_Death;
+				myState = States.floor_Life;
 			}
 			else if(stoneFed == false)
 			{
-				myState = States.floor_Life;
+				myState = States.floor_Death;
 			}
 		}
 	}
@@ -771,27 +792,82 @@ public class TextControllor : MonoBehaviour {
 	void state_wall()
 	{
 		text.text = "You approach the wall at the end of the corridor. " +
-					"T
+					"It appears that the wall has three stone buttons, each could be pressed." +
+					"The first is a Horse, the second a crocodile and the third an elephant.\n" +
+					"Underneath is written the single word - 'Tlaltecuhtli'.\n\n" +
+					"Press E to press the Elephant.\n" +
+					"Press C to press the Crocodile.\n" +
+					"Press H to press the Horse.\n";
+					
+		if(Input.GetKeyDown(KeyCode.E))
+		{
+			myState = States.wall_Death_elephant;
+		}
+		else if(Input.GetKeyDown (KeyCode.C))
+		{
+			myState = States.wall_Life;
+		}
+		else if(Input.GetKeyDown(KeyCode.H))
+		{
+			myState = States.wall_Death_horse;
+		}
 	}
 	
 	void state_wall_Death_Elephant()
 	{
+		text.text = "As you press the button, you hear a strange clicking sound. " +
+					"Before you can enquire any more into this, you feel several sharp pains across your left side. " +
+					"You look down to find multiple darts inserted into your arm and leg. You feel something seeping into your blood. " +
+					"Within seconds, the world goes back. \n\n" +
+					"Press C to Continue.";
 		
+		if(Input.GetKeyDown (KeyCode.C))
+		{
+			myState = States.death;
+		}
 	}
 	
 	void state_wall_Death_Horse()
 	{
-	
+		text.text = "As you push the horse button inwards, you hear a low heavy rumble. You see dust fall past your face. " +
+					"You look up and after a few seconds of processing, you understand the ceiling is slowly moving downwards. " +
+					"You try and run backwards, but the corridor is just getting to small. Eventually you begin to crawl. None of this prevents your fate. " +
+					"Soon enough the ceiling and the floor meet, and it is all at your expense.\n\n" +
+					"Press C to Continue";
+		
+		if(Input.GetKeyDown(KeyCode.C))
+		{
+			myState = States.death;
+		}
 	}
 	
 	void state_wall_Life()
 	{
-	
+		text.text = "You press the Crocodile button. You assume this is probably a wrong move, but what choice do you have? " +
+					"You hear a high cracking sound, and guess that this is the end. " +
+					"Suddenly a large break appears between the bricks, and it grows larger. " +
+					"Before you can react, more bricks fall down and a hole begins to form. You become blinded.\n\n" +
+					"Press C to Continue.";
+		
+		if(Input.GetKeyDown (KeyCode.C))
+		{
+			myState = States.freedom0;
+		}
 	}
 	
-	void state_freedom()
+	void state_freedom0()
 	{
-	
+		text.text = "Quickly your sight returns, but it isnt the dim, redish light you've become accustomed to. " +
+					"This is a strong yellowish light, and as your vision focuses, you realise you are outside! " +
+					"You've escaped! You look out onto the wide mexican desert, without ever looking back at the Aztec pyramid which has held you all this time. " +
+					"Against all of the odds, you are free and most importantly - alive.\n\n" +
+					"Press R to Restart";
+		
+		if(Input.GetKeyDown (KeyCode.R))
+		{
+			myState = States.room0;
+		}
 	}
 	
+
 }
