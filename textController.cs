@@ -1,29 +1,45 @@
+/*
+Escape The Temple V 0.1
+
+Simple Text Adventure game with two dungeons to escape. Uses a finite state engine to run. 
+I built it as part of my studies in C#. Hopefully this highlights that I can create complexity from simplicity.
+
+*/
+
+//Import Engines
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
+//Main Class
 public class TextControllor : MonoBehaviour {
 
+	//Sets up the controller
 	public Text text;
 	
+	//Backbone of the Finite State Machine, the states.
 	private enum States{room0, room1, room_Key, room_Torch, room_Both, key, torch, box, box_Death, door0, door_Key, door_Locked, door_Torch, door_Both, door_Death, door_Unlock, false_freedom, death, corridor0, corridor1, floor_Death, floor_Life, mosaic, stone0, stone1, face_Death, face_Unlock, wall_Death_elephant, wall_Death_horse, wall_Life, wall, freedom0};
 	private States myState;
 	
+	// Main bool variables which directly affect states.
 	bool keyInv = false;
 	bool torchInv = false;
 	bool stoneFed = false;
 	
+	//Initialisation function
 	void Start () 
 	{
 		text.text = "Welcome to Aztec Adventure!";
 		myState = States.room0;
 	}
 	
+	//Update function, runs every frame.
 	void Update () 
 	{
+		//Calls function based on which state we are currently in
 		if (myState == States.room0)
 		{
-			state_room0();
-			
+			state_room0();	
 		}
 		else if(myState == States.box)
 		{
@@ -141,11 +157,20 @@ public class TextControllor : MonoBehaviour {
 		{
 			state_freedom0();
 		}
-		
+		else if(myState == States.wall)
+		{
+			state_wall();
+		}
+		else if(myState == States.wall_Life)
+		{
+			state_wall_Life();
+		}	
 	}
 	
+	//Functions which are called by states. These are our pages.
 	void state_room0()
 	{
+		//Initial state, so we reset all our variables.
 		keyInv = false;
 		torchInv = false;
 		stoneFed = false;
@@ -159,6 +184,7 @@ public class TextControllor : MonoBehaviour {
 					"Press K to view the Key.\n" +
 					"Press D to view the Door.";
 		
+		//Checks for key presses, advances game as such. Exactly the same logic throughout the game.
 		if(Input.GetKeyDown(KeyCode.B))
 		{
 			myState = States.box;
@@ -633,11 +659,11 @@ public class TextControllor : MonoBehaviour {
 		}
 		else if(Input.GetKeyDown(KeyCode.W))
 		{
-			if (stoneFed == true)
+			if (stoneFed == false)
 			{
 				myState = States.floor_Death;
 			}
-			else if(stoneFed == false)
+			else if(stoneFed == true)
 			{
 				myState = States.floor_Life;
 			}
@@ -868,6 +894,4 @@ public class TextControllor : MonoBehaviour {
 			myState = States.room0;
 		}
 	}
-	
-
 }
